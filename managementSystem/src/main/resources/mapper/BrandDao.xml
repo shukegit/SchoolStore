@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ms.dao.BrandDao">
+
+	<sql id="brand_column_list">
+		brand_id,brand_owner_id,brand_introduce_id,brand_record_id,openshop_standard_id,
+		cooperation_shop_id,brand_maintain_id,brand_status_id,company_id,fir_trade_id,sec_trade_id,
+		thi_trade_id,brand_chName,brand_enName,brand_firLetter,brand_otherName,img_addr,brand_grade,
+		brand_type,brand_runway,brand_phone,brand_website,brand_logo,brand_audit_status,create_time,last_edit_time		
+	</sql>
+
+	<resultMap type="com.ms.pojo.Brand" id="brandMap">
+		<id column="brand_id" property="brandId" />
+		<result column="brand_chName" property="brandChName"></result>
+		<result column="brand_enName" property="brandEnName"></result>
+		<result column="brand_firLetter" property="brandFirLetter"></result>
+		<result column="brand_otherName" property="brandOtherName"></result>
+		<result column="img_addr" property="imgAddr"></result>
+		<result column="brand_grade" property="brandGrade"></result>
+		<result column="brand_type" property="brandType"></result>
+		<result column="brand_runway" property="brandRunWay"></result>
+		<result column="brand_phone" property="brandPhone"></result>
+		<result column="brand_website" property="brandWebsite"></result>
+		<result column="brand_logo" property="brandLogo"></result>
+		<result column="brand_audit_status" property="brandAuditStatus"></result>
+		<result column="create_time" property="createTime"></result>
+		<result column="last_edit_time" property="lastEditTime"></result>
+		<association property="brandOwner"
+			javaType="com.ms.pojo.BrandOwner">
+			<id column="user_id" property="userId" />
+			<result column="user_chname" property="userChname"></result>
+		</association>
+		<association property="brandIntroduce"
+			javaType="com.ms.pojo.BrandIntroduce">
+			<id column="brandIntroduce_id" property="brandIntroduceId" />
+			<result column="brand_introduce" property="brandIntroduce"></result>
+		</association>
+		<association property="openshopStandard"
+			javaType="com.ms.pojo.OpenshopStandard">
+			<id column="openshop_standard_id" property="openshopStandardId" />
+		</association>
+		<association property="cooperationShop"
+			javaType="com.ms.pojo.CooperationShop">
+			<id column="cooperation_shop_id" property="cooperationShopId" />
+			<result column="store_name" property="storeName"></result>
+		</association>
+		<association property="brandMaintain"
+			javaType="com.ms.pojo.BrandMaintain">
+			<id column="brand_maintain_id" property="brandMaintainId" />
+			<result column="founder" property="founder"></result>
+			<result column="administrator" property="administrator"></result>
+			<result column="contributor" property="contributor"></result>
+		</association>
+		<association property="brandStatus"
+			javaType="com.ms.pojo.BrandStatus">
+			<id column="cooperation_shop_id" property="cooperationShopId" />
+			<result column="store_name" property="storeName"></result>
+		</association>
+		<association property="brandCompany"
+			javaType="com.ms.pojo.BrandCompany">
+			<id column="company_id" property="companyId" />
+			<result column="company_type" property="companyType"></result>
+		</association>
+		<association property="firTrade"
+			javaType="com.ms.pojo.FirTrade">
+			<id column="fir_trade_id" property="firTradeId" />
+			<result column="fir_trade_desc" property="firTradeDesc"></result>
+		</association>
+		<association property="secTrade"
+			javaType="com.ms.pojo.SecTrade">
+			<id column="sec_trade_id" property="secTradeId" />
+			<result column="sec_trade_desc" property="secTradeDesc"></result>
+		</association>
+		<association property="thiTrade"
+			javaType="com.ms.pojo.ThiTrade">
+			<id column="thi_trade_id" property="thiTradeId" />
+			<result column="thi_trade_desc" property="thiTradeDesc"></result>
+		</association>
+	</resultMap>
+	
+	<select id="selectBrandByName" resultMap="brandMap">
+		SELECT 
+		<include refid="brand_column_list"></include>
+		FROM
+		tb_brand
+		where 
+		brand_chName=#{name}
+	</select>
+
+	<delete id="deleteBrand">
+		DELETE FROM
+		tb_brand
+		WHERE
+		brand_chName = #{chName}
+	</delete>
+
+	<insert id="insertBrand" useGeneratedKeys="true"
+		keyColumn="brand_id" keyProperty="brandId" parameterType="com.ms.pojo.Brand">
+		INSERT INTO
+		tb_brand
+		(brand_owner_id,brand_introduce_id,brand_record_id,openshop_standard_id,
+		cooperation_shop_id,brand_maintain_id,brand_status_id,company_id,fir_trade_id,sec_trade_id,
+		thi_trade_id,brand_chName,brand_enName,brand_firLetter,brand_otherName,img_addr,brand_grade,
+		brand_type,brand_runway,brand_phone,brand_website,brand_logo,brand_audit_status,create_time,last_edit_time
+		)
+		VALUES
+		(#{brandOwner.userId},#{brandIntroduce.brandIntroduceId},#{brandRecord.brandRecordId},
+		#{openshopStandard.openshopStandardId},#{cooperationShop.cooperationShopId},#{brandMaintain.brandMaintainId},#{brandStatus.brandStatusId},
+		#{brandCompany.companyId},#{firTrade.firTradeId},#{secTrade.secTradeId},#{thiTrade.thiTradeId},#{brandChName},#{brandEnName},#{brandFirLetter},
+		#{brandOtherName},#{imgAddr},#{brandGrade},#{brandType},#{brandRunWay},#{brandPhone},#{brandWebsite},#{brandLogo},#{brandAuditStatus},
+		#{createTime},#{lastEditTime});
+	</insert>
+
+	<update id="updateBrand" parameterType="com.ms.pojo.Brand">
+		UPDATE tb_brand
+		<set>
+			<if test="brandChName != null">brand_chName=#{brandChName},</if>
+			<if test="brandEnName != null">brand_enName=#{brandEnName},</if>
+			<if test="brandFirLetter != null">brand_firLetter=#{brandFirLetter},</if>
+			<if test="brandOtherName != null">brand_otherName=#{brandOtherName},</if>
+			<if test="imgAddr != null">img_addr=#{imgAddr},</if>
+			<if test="brandGrade != null">brand_grade=#{brandGrade},</if>
+			<if test="brandType != null">brand_type=#{brandType},</if>
+			<if test="brandRunWay != null">brand_runway=#{brandRunWay},</if>
+			<if test="brandPhone != null">brand_phone=#{brandPhone},</if>
+			<if test="brandWebsite != null">brand_website=#{brandWebsite},</if>
+			<if test=" brandLogo!= null">brand_logo=#{brandLogo},</if>
+			<if test="brandAuditStatus != null">brand_audit_status=#{brandAuditStatus},</if>
+			<if test=" createTime!= null">create_time=#{createTime},</if>
+			<if test="lastEditTime != null">last_edit_time=#{lastEditTime}</if>
+		</set>
+		WHERE
+		brand_id=#{brandId}
+	</update>
+	
+	
+	<select id="selectBrandList" resultMap="brandMap">
+	SELECT 
+	b.brand_id,
+	ft.fir_trade_id,
+	ft.fir_trade_desc,
+	st.sec_trade_id,
+	st.sec_trade_desc,
+	b.brand_grade,
+	b.brand_chName,
+	bm.administrator,
+	b.brand_type,
+	b.create_time,
+	b.brand_audit_status
+	FROM
+	tb_brand b,
+	tb_brand_maintain bm,
+	tb_fir_trade ft,
+	tb_sec_trade st,
+	tb_thi_trade tt
+	<where>
+		<!-- 少一个按照时间查询的 -->
+		<if test="brand.brandChName != null">and b.brand_chName like '%' #{brand.brandChName} '%'</if>
+		<if test="brand.brandFirLetter != null">and b.brand_firLetter=#{brand.brandFirLetter}</if>
+		<if test="brand.brandType != 0">and b.brand_Type=#{brand.brandType}</if>
+		<if test="brand.brandAuditStatus != 0">and b.brand_audit_status=#{brand.brandAuditStatus}</if>
+		<if test="brand.brandGrade != null">and b.brand_grade=#{brand.brandGrade}</if>
+		<if test="brand.brandRunWay != null">and b.brand_runWay=#{brand.brandRunWay}</if>
+		<if test="brand.brandMaintain != null">and bm.administrator=#{brand.brandMaintain.administrator}</if>
+		<if test="brand.firTrade != null and brand.firTrade.firTradeId != null">and b.fir_trade_id=#{brand.firTrade.firTradeId}</if>
+		<if test="brand.secTrade != null and brand.secTrade.secTradeId != null">and b.sec_trade_id=#{brand.secTrade.secTradeId}</if>
+		<if test="brand.thiTrade != null and brand.thiTrade.thiTradeId != null">and b.thi_trade_id=#{brand.thiTrade.thiTradeId}</if>
+		AND
+		b.fir_trade_id = ft.fir_trade_id
+		AND
+		b.sec_trade_id = st.sec_trade_id
+		AND
+		b.thi_trade_id = tt.thi_trade_id
+		AND
+		b.brand_maintain_id = bm.brand_maintain_id	
+	</where>
+	ORDER BY 
+	b.brand_id DESC
+	LIMIT #{rowIndex},#{pageSize}
+	</select>
+
+</mapper>

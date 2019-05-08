@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ms.dao.ThiTradeDao">
+	<select id="selectThiTradeList"
+		resultType="com.ms.pojo.ThiTrade">
+		SELECT
+		thi_trade_id,
+		thi_trade_desc,
+		sec_trade_id,
+		priority
+		FROM
+		tb_thi_trade
+		<where>
+			<if test="secTradeId != null">
+				AND sec_trade_id = #{secTradeId} 
+			</if>
+		</where>
+		ORDER BY
+		priority DESC
+	</select>
+</mapper>
